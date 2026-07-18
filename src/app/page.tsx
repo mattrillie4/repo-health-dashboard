@@ -1,39 +1,36 @@
+"use client";
+
+import { useState } from "react";
 import RepoSummary from "@/components/RepoSummary";
-import { Repo } from "@/lib/types";
+import SearchForm from "@/components/SearchForm";
+import { fakeRepoReports } from "./data/fakeRepoReports";
+import type { Repo } from "@/lib/types";
 
-// create dummy repo
-const fakeRepo: Repo = {
-  owner: "facebook",
-  name: "react",
-  fullName: "facebook/react",
-  description: "The library for web and native user interfaces.",
-  stars: 230000,
-  forks: 47000,
-  primaryLanguage: "JavaScript",
-  hasReadme: true,
-  hasLicense: true,
-  hasCi: true,
-  openIssues: 1200,
-  openPullRequests: 430,
-  updatedAt: "2026-07-01",
-  score: 86,
-  tips: [
-    "Add a short architecture section to the README.",
-    "Label beginner-friendly issues to help contributors.",
-    "Document the test command clearly.",
-  ],
-  languages: [
-    { name: "JavaScript", percentage: 72 },
-    { name: "TypeScript", percentage: 18 },
-    { name: "CSS", percentage: 10 },
-  ],
-};
+export default function HomePage() {
+  const [selectedRepo, setSelectedRepo] = useState<Repo | null>(null);
 
-export default function Home() {
+  function handleSearch(repoInput: string, ownerInput: string) {
+    const normalizedInput = `${repoInput.trim().toLowerCase()}/${ownerInput.trim().toLowerCase()}`;
+    const repo = fakeRepoReports[normalizedInput]; // set repo to fake data
+
+    // if no repo matches, set to null
+    if (!repo) {
+      setSelectedRepo(null);
+    }
+    setSelectedRepo(repo);
+  }
+
   return (
     <main>
-      <h1 className="text-gray-900 text-3xl p-5">Repo Health Dashboard</h1>
-      <RepoSummary repo={fakeRepo} />
+      <h1>GitHub Repo Health Dashboard</h1>
+
+      <SearchForm onSearch={handleSearch} />
+
+      {selectedRepo ? (
+        <RepoSummary repo={selectedRepo} />
+      ) : (
+        <p>Search for a repository to see its health report.</p>
+      )}
     </main>
   );
 }

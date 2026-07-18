@@ -1,6 +1,11 @@
 import { Repo } from "@/lib/types";
 
-export default function RepoSummary({ repo }: { repo: Repo }) {
+// define callback props
+type RepoSummaryProps = {
+  repo: Repo;
+};
+
+export default function RepoSummary({ repo }: RepoSummaryProps) {
   return (
     <div className="bg-white rounded-lg shadow p-4 border border-gray-200">
       <div className="flex justify-between items-start">
