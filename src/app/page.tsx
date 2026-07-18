@@ -8,16 +8,27 @@ import type { Repo } from "@/lib/types";
 
 export default function HomePage() {
   const [selectedRepo, setSelectedRepo] = useState<Repo | null>(null);
+  const [error, setError] = useState("");
 
-  function handleSearch(repoInput: string, ownerInput: string) {
-    const normalizedInput = `${repoInput.trim().toLowerCase()}/${ownerInput.trim().toLowerCase()}`;
+  async function handleSearch(repoInput: string, ownerInput: string) {
+    const normalizedInput = `${ownerInput.trim().toLowerCase()}/${repoInput.trim().toLowerCase()}`;
     const repo = fakeRepoReports[normalizedInput]; // set repo to fake data
 
-    // if no repo matches, set to null
-    if (!repo) {
-      setSelectedRepo(null);
+    try {
+      const response = await fetch(
+        `https://api.github.com/repos/${normalizedInput}`,
+      );
+      const data = await response.json();
+      console.log(data);
+      // if no repo matches, set to null
+      if (!repo) {
+        setSelectedRepo(null);
+      }
+      setSelectedRepo(repo);
+    } catch (err: any) {
+      setError(err.message);
+      console.log(err);
     }
-    setSelectedRepo(repo);
   }
 
   return (
@@ -31,6 +42,7 @@ export default function HomePage() {
       ) : (
         <p>Search for a repository to see its health report.</p>
       )}
+      {error && <p>{error}</p>}
     </main>
   );
 }

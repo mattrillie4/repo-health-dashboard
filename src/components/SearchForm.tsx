@@ -22,14 +22,16 @@ export default function SearchForm({ onSearch }: SearchFormProps) {
   return (
     <form onSubmit={handleSubmit}>
       <input
+        value={ownerInput}
+        onChange={(e) => setOwnerInput(e.target.value)}
+        placeholder="Owner"
+      ></input>
+      <input
         value={repoInput}
         onChange={(e) => setRepoInput(e.target.value)}
         placeholder="Repo"
       ></input>
-      <input
-        value={ownerInput}
-        onChange={(e) => setOwnerInput(e.target.value)}
-      ></input>
+
       <button type="submit">Search</button>
     </form>
   );
