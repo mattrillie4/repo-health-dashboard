@@ -18,13 +18,38 @@ export default function HomePage() {
       const response = await fetch(
         `https://api.github.com/repos/${normalizedInput}`,
       );
+
       const data = await response.json();
+      // if error not thrown, check here
+      if (!response.ok) {
+        setError(data.message);
+        return;
+      }
+
       console.log(data);
+      const report: Repo = {
+        owner: data.owner.login,
+        name: data.name,
+        fullName: data.full_name,
+        description: data.description,
+        stars: data.stargazers_count,
+        forks: data.forks_count,
+        primaryLanguage: data.language,
+        hasReadme: true,
+        hasLicense: Boolean(data.license),
+        hasCi: true,
+        openIssues: data.open_issues_count,
+        openPullRequests: 20,
+        updatedAt: data.updated_at,
+        score: 12,
+        tips: ["string"],
+        languages: [{ name: "example", percentage: 23 }],
+      };
       // if no repo matches, set to null
       if (!repo) {
         setSelectedRepo(null);
       }
-      setSelectedRepo(repo);
+      setSelectedRepo(report);
     } catch (err: any) {
       setError(err.message);
       console.log(err);
