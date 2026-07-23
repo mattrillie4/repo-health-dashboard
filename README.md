@@ -58,10 +58,10 @@ src/app/api/repos/[owner]/[repo]/route.ts
 For example, requesting:
 
 ```text
-/api/repos/facebook/react
+/api/repos/react/react
 ```
 
-retrieves information about the `facebook/react` repository.
+retrieves information about the `react/react` repository.
 
 ## Getting started
 
