@@ -76,6 +76,30 @@ export async function GET(
     const pullRequests = await pullRequestsResponse.json();
     const openPullRequests = pullRequests.total_count;
 
+    // search for the existence of a readme
+    const readmeResponse = await fetch(
+      `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/readme`,
+      {
+        headers: {
+          Accept: "application/vnd.github+json",
+        },
+        cache: "no-store",
+      },
+    );
+    let hasReadme: boolean;
+    // check status of response
+    if (readmeResponse.ok) {
+      hasReadme = true;
+    } else if (readmeResponse.status === 404) {
+      hasReadme = false;
+    } else {
+      return Response.json(
+        {
+          error: "Unable to check for a README",
+        },
+        { status: readmeResponse.status },
+      );
+    }
     // return combined object response with all requests
     return Response.json({
       owner: repository.owner.login,
@@ -89,6 +113,7 @@ export async function GET(
       openPullRequests,
       updatedAt: repository.updated_at,
       hasLicense: Boolean(repository.license),
+      hasReadme,
     });
   } catch {
     return Response.json(

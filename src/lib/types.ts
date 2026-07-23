@@ -2,13 +2,12 @@ export type Repo = {
   owner: string;
   name: string;
   fullName: string;
-  description: string;
+  description: string | null;
   stars: number;
   forks: number;
-  primaryLanguage: string;
+  primaryLanguage: string | null;
   hasReadme: boolean;
   hasLicense: boolean;
-  hasCi: boolean;
   openIssues: number;
   openPullRequests: number;
   updatedAt: string;

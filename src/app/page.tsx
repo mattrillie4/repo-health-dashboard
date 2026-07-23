@@ -13,7 +13,6 @@ export default function HomePage() {
 
   async function handleSearch(repoInput: string, ownerInput: string) {
     const normalizedInput = `${encodeURIComponent(ownerInput.trim().toLowerCase())}/${encodeURIComponent(repoInput.trim().toLowerCase())}`;
-    const repo = fakeRepoReports[normalizedInput]; // set repo to fake data
 
     setError(""); // reset error to nothing
     setRepoLoading(true);
@@ -30,7 +29,7 @@ export default function HomePage() {
       }
 
       console.log(data);
-      const report: Repo = {
+      const repo: Repo = {
         owner: data.owner,
         name: data.name,
         fullName: data.fullName,
@@ -38,21 +37,20 @@ export default function HomePage() {
         stars: data.stars,
         forks: data.forks,
         primaryLanguage: data.primaryLanguage,
-        hasReadme: true,
+        hasReadme: data.hasReadme,
         hasLicense: data.hasLicense,
-        hasCi: true,
         openIssues: data.openIssues,
         openPullRequests: data.openPullRequests,
         updatedAt: data.updatedAt,
         score: 0,
-        tips: ["string"],
+        tips: ["Tips coming soon"],
         languages: [{ name: "example", percentage: 23 }],
       };
       // if no repo matches, set to null
       if (!repo) {
         setSelectedRepo(null);
       }
-      setSelectedRepo(report);
+      setSelectedRepo(repo);
     } catch (err: any) {
       setError(err.message);
       console.log(err);
