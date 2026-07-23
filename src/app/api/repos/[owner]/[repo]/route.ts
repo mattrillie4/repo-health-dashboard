@@ -75,6 +75,27 @@ export async function GET(
     }
     const pullRequests = await pullRequestsResponse.json();
     const openPullRequests = pullRequests.total_count;
+    // search separately for issues that arent open pull requests
+    const issuesResponse = await fetch(
+      `https://api.github.com/search/issues?q=repo:${encodeURIComponent(owner)}/${encodeURIComponent(repo)} is:issue is:open`,
+      {
+        headers: {
+          Accept: "application/vnd.github+json",
+        },
+        cache: "no-store",
+      },
+    );
+    if (!issuesResponse.ok) {
+      return Response.json(
+        {
+          error: "Unable to retrieve issues",
+        },
+        { status: issuesResponse.status },
+      );
+    }
+    // if okay, return response
+    const issues = await issuesResponse.json();
+    const openIssues = issues.total_count;
 
     // search for the existence of a readme
     const readmeResponse = await fetch(
@@ -142,7 +163,7 @@ export async function GET(
       stars: repository.stargazers_count,
       forks: repository.forks_count,
       primaryLanguage: repository.language,
-      openIssues: repository.open_issues_count,
+      openIssues,
       openPullRequests,
       updatedAt: repository.updated_at,
       hasLicense: Boolean(repository.license),
