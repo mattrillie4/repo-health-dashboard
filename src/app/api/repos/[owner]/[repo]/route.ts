@@ -1,8 +1,30 @@
+//input validation helper function
+function isValidInput(value: string): boolean {
+  return (
+    value.length > 0 &&
+    value.length <= 100 &&
+    !value.includes("/") &&
+    !value.includes("\\")
+  );
+}
+
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ owner: string; repo: string }> },
 ): Promise<Response> {
-  const { owner, repo } = await params;
+  const routeParams = await params; //extract params for input validation
+
+  const owner = routeParams.owner.trim();
+  const repo = routeParams.repo.trim();
+
+  if (!isValidInput(owner) || !isValidInput(repo)) {
+    return Response.json(
+      {
+        error: "Invalid repository owner or name",
+      },
+      { status: 400 },
+    );
+  }
   try {
     const githubResponse = await fetch(
       `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}`,
