@@ -13,9 +13,25 @@ type SearchFormProps = {
 export default function SearchForm({ onSearch }: SearchFormProps) {
   const [repoInput, setRepoInput] = useState("");
   const [ownerInput, setOwnerInput] = useState("");
+  const [validationError, setValidationError] = useState("");
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    // input validation before searching
+    const owner = ownerInput.trim();
+    const repo = repoInput.trim();
+
+    if (!owner || !repo) {
+      setValidationError("Enter both an owner and repository name");
+      return;
+    }
+    if (owner.includes("/") || repo.includes("/")) {
+      setValidationError(
+        "Enter the owner and repository separately without slashes",
+      );
+      return;
+    }
+    setValidationError(""); // reset error message if input is okay
     onSearch(repoInput, ownerInput);
   }
 
@@ -25,14 +41,26 @@ export default function SearchForm({ onSearch }: SearchFormProps) {
         value={ownerInput}
         onChange={(e) => setOwnerInput(e.target.value)}
         placeholder="Owner"
+        aria-label="Repository owner"
+        required
+        maxLength={100}
       ></input>
       <input
         value={repoInput}
         onChange={(e) => setRepoInput(e.target.value)}
         placeholder="Repo"
+        aria-label="Repository name"
+        required
+        maxLength={100}
       ></input>
 
       <button type="submit">Search</button>
+
+      {validationError && (
+        <p role="alert" className="text-sm text-red-600">
+          {validationError}
+        </p>
+      )}
     </form>
   );
 }
