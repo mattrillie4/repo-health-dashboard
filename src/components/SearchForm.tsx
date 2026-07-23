@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import type { Repo } from "@/lib/types";
 
 // The search form will handle the user inputting the desired owner and repo, and will then pass
 // the info to other components to display and handle data

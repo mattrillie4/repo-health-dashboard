@@ -26,6 +26,7 @@ export async function GET(
     );
   }
   try {
+    // search for repository summary information
     const githubResponse = await fetch(
       `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}`,
       {
@@ -53,7 +54,42 @@ export async function GET(
     }
     // return response as json if valid
     const repository = await githubResponse.json();
-    return Response.json(repository);
+
+    // search for amount of pull requests
+    const pullRequestsResponse = await fetch(
+      `https://api.github.com/search/issues?q=repo:${encodeURIComponent(owner)}/${encodeURIComponent(repo)} is:pr is:open`,
+      {
+        headers: {
+          Accept: "application/vnd.github+json",
+        },
+        cache: "no-store",
+      },
+    );
+    if (!pullRequestsResponse.ok) {
+      return Response.json(
+        {
+          error: "Unable to retrieve pull requests",
+        },
+        { status: pullRequestsResponse.status },
+      );
+    }
+    const pullRequests = await pullRequestsResponse.json();
+    const openPullRequests = pullRequests.total_count;
+
+    // return combined object response with all requests
+    return Response.json({
+      owner: repository.owner.login,
+      name: repository.name,
+      fullName: repository.full_name,
+      description: repository.description,
+      stars: repository.stargazers_count,
+      forks: repository.forks_count,
+      primaryLanguage: repository.language,
+      openIssues: repository.open_issues_count,
+      openPullRequests,
+      updatedAt: repository.updated_at,
+      hasLicense: Boolean(repository.license),
+    });
   } catch {
     return Response.json(
       {
