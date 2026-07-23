@@ -3,7 +3,6 @@
 import { useState } from "react";
 import RepoSummary from "@/components/RepoSummary";
 import SearchForm from "@/components/SearchForm";
-import { fakeRepoReports } from "./data/fakeRepoReports";
 import type { Repo } from "@/lib/types";
 
 export default function HomePage() {
