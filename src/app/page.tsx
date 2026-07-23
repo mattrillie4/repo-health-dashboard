@@ -46,13 +46,12 @@ export default function HomePage() {
         languages: data.languagePercentages,
       };
       // if no repo matches, set to null
-      if (!repo) {
-        setSelectedRepo(null);
-      }
+
       setSelectedRepo(repo);
-    } catch (err: any) {
-      setError(err.message);
-      console.log(err);
+    } catch (error: unknown) {
+      setError(
+        error instanceof Error ? error.message : "An unexpected error occured",
+      );
     } finally {
       setRepoLoading(false);
     }

@@ -20,7 +20,9 @@ export default function RepoSummary({ repo }: RepoSummaryProps) {
       </div>
 
       <div className="mt-2 text-sm text-gray-600 space-y-1">
-        <h1 className="text-black">Primary Language: {repo.primaryLanguage}</h1>
+        <h1 className="text-black">
+          Primary Language: {repo.primaryLanguage ?? "Not detected"}
+        </h1>
         <p>⭐ {repo.stars} stars</p>
         <p>🐛 {repo.openIssues} open issues</p>
         <p>🍴 {repo.forks} forks</p>
@@ -38,7 +40,9 @@ export default function RepoSummary({ repo }: RepoSummaryProps) {
       </div>
 
       <div className="text-s mt-3 bg-gray-50 rounded-lg p-4">
-        <p className="text-gray-900 text-sm">{repo.description}</p>
+        <p className="text-gray-900 text-sm">
+          {repo.description ?? "No description provided"}
+        </p>
       </div>
     </div>
   );

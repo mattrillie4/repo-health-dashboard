@@ -147,17 +147,18 @@ src/
 
 ## Planned work
 
-- Improve client-side and server-side input validation
-- Add accurate loading, empty, and error states
-- Remove the remaining fake report data
-- Define types for the GitHub API data used by the application
-- Detect README and CI workflow presence
-- Retrieve open pull requests and language breakdowns
-- Create transparent repository health checks
-- Calculate a real health score from those checks
-- Generate practical improvement recommendations
-- Add automated tests for data mapping and scoring
-- Improve responsive styling and accessibility
+- [ ] Improve client-side and server-side input validation
+- [ ] Add accurate loading, empty, and error states
+- [ ] Remove the remaining fake report data
+- [ ] Define types for the GitHub API data used by the application
+- [x] Detect README presence
+- [ ] Detect CI workflow presence
+- [x] Retrieve open pull requests and language breakdowns
+- [ ] Create transparent repository health checks
+- [ ] Calculate a real health score from those checks
+- [ ] Generate practical improvement recommendations
+- [ ] Add automated tests for data mapping and scoring
+- [ ] Improve responsive styling and accessibility
 
 ## GitHub API usage
 
