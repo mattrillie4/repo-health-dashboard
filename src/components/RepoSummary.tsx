@@ -25,8 +25,16 @@ export default function RepoSummary({ repo }: RepoSummaryProps) {
         <p>🐛 {repo.openIssues} open issues</p>
         <p>🍴 {repo.forks} forks</p>
         <p>🔀 {repo.openPullRequests} open PRs</p>
-        <p>Contains README? {repo.hasReadme ? "✅" : "❌"}</p>
+        <p className="mt-3">Contains README? {repo.hasReadme ? "✅" : "❌"}</p>
         <p>Contains License? {repo.hasLicense ? "✅" : "❌"}</p>
+        <h1 className="text-black mt-3">
+          Language Breakdown: {repo.primaryLanguage}
+        </h1>
+        {repo.languages.map((lang) => (
+          <div key={lang.name}>
+            {lang.name} : {lang.percentage.toFixed(1)}%
+          </div>
+        ))}
       </div>
 
       <div className="text-s mt-3 bg-gray-50 rounded-lg p-4">

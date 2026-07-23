@@ -100,6 +100,39 @@ export async function GET(
         { status: readmeResponse.status },
       );
     }
+
+    // search for the exact language spread of the repo
+    const languagesResponse = await fetch(
+      `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/languages`,
+      {
+        headers: {
+          Accept: "application/vnd.github+json",
+        },
+        cache: "no-store",
+      },
+    );
+    if (!languagesResponse.ok) {
+      return Response.json(
+        {
+          error: "Unable to retrieve language spread",
+        },
+        { status: languagesResponse.status },
+      );
+    }
+    // convert to json and calculate as percentages
+    const languagesRaw: Record<string, number> = await languagesResponse.json();
+    const total = Object.values(languagesRaw).reduce(
+      (a: number, b: number) => a + b,
+      0,
+    );
+
+    const languagePercentages = Object.entries(languagesRaw).map(
+      ([lang, bytes]) => ({
+        name: lang,
+        percentage: total === 0 ? 0 : Number((bytes / total) * 100),
+      }),
+    );
+
     // return combined object response with all requests
     return Response.json({
       owner: repository.owner.login,
@@ -114,6 +147,7 @@ export async function GET(
       updatedAt: repository.updated_at,
       hasLicense: Boolean(repository.license),
       hasReadme,
+      languagePercentages,
     });
   } catch {
     return Response.json(

@@ -44,7 +44,7 @@ export default function HomePage() {
         updatedAt: data.updatedAt,
         score: 0,
         tips: ["Tips coming soon"],
-        languages: [{ name: "example", percentage: 23 }],
+        languages: data.languagePercentages,
       };
       // if no repo matches, set to null
       if (!repo) {
