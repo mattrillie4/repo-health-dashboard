@@ -19,6 +19,26 @@ export type Repo = {
   }[];
 };
 
+// type for the normalized response returned by our Next.js API endpoint
+export type RepoApiResponse = {
+  owner: string;
+  name: string;
+  fullName: string;
+  description: string | null;
+  stars: number;
+  forks: number;
+  primaryLanguage: string | null;
+  hasReadme: boolean;
+  hasLicense: boolean;
+  openIssues: number;
+  openPullRequests: number;
+  updatedAt: string;
+  languagePercentages: {
+    name: string;
+    percentage: number;
+  }[];
+};
+
 // type for the general repo response from the Github REST API
 export type GitHubRepositoryResponse = {
   name: string;
@@ -39,11 +59,11 @@ export type GitHubRepositoryResponse = {
 
 // type created for open issues and open pull requests
 // uses github search API structure instead
-export type GithubSearchResponse = {
+export type GitHubSearchResponse = {
   total_count: number;
   incomplete_results: boolean;
 };
 
 // type created for the language percentage spread request
 // returned from a separate github search query
-export type GithubLanguagesResponse = Record<string, number>;
+export type GitHubLanguagesResponse = Record<string, number>;

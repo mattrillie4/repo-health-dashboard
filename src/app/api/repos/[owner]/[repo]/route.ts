@@ -1,7 +1,8 @@
 import type {
-  GithubLanguagesResponse,
+  GitHubLanguagesResponse,
   GitHubRepositoryResponse,
-  GithubSearchResponse,
+  GitHubSearchResponse,
+  RepoApiResponse,
 } from "@/lib/types";
 
 //input validation helper function
@@ -81,7 +82,7 @@ export async function GET(
       );
     }
     const pullRequests =
-      (await pullRequestsResponse.json()) as GithubSearchResponse;
+      (await pullRequestsResponse.json()) as GitHubSearchResponse;
     const openPullRequests = pullRequests.total_count;
     // search separately for issues that arent open pull requests
     const issuesResponse = await fetch(
@@ -102,7 +103,7 @@ export async function GET(
       );
     }
     // if okay, return response
-    const issues = (await issuesResponse.json()) as GithubSearchResponse;
+    const issues = (await issuesResponse.json()) as GitHubSearchResponse;
     const openIssues = issues.total_count;
 
     // search for the existence of a readme
@@ -150,7 +151,7 @@ export async function GET(
     }
     // convert to json and calculate as percentages
     const languagesRaw =
-      (await languagesResponse.json()) as GithubLanguagesResponse;
+      (await languagesResponse.json()) as GitHubLanguagesResponse;
     const total = Object.values(languagesRaw).reduce(
       (a: number, b: number) => a + b,
       0,
@@ -163,8 +164,8 @@ export async function GET(
       }),
     );
 
-    // return combined object response with all requests
-    return Response.json({
+    // combine all GitHub responses into the shape returned by our API
+    const responseData: RepoApiResponse = {
       owner: repository.owner.login,
       name: repository.name,
       fullName: repository.full_name,
@@ -178,7 +179,9 @@ export async function GET(
       hasLicense: Boolean(repository.license),
       hasReadme,
       languagePercentages,
-    });
+    };
+
+    return Response.json(responseData);
   } catch {
     return Response.json(
       {

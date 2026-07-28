@@ -3,7 +3,7 @@
 import { useState } from "react";
 import RepoSummary from "@/components/RepoSummary";
 import SearchForm from "@/components/SearchForm";
-import type { Repo } from "@/lib/types";
+import type { Repo, RepoApiResponse } from "@/lib/types";
 
 export default function HomePage() {
   const [selectedRepo, setSelectedRepo] = useState<Repo | null>(null);
@@ -20,29 +20,31 @@ export default function HomePage() {
     try {
       const response = await fetch(`/api/repos/${normalizedInput}`);
 
-      const data = await response.json();
+      const data: unknown = await response.json();
       // if error not thrown, check here
       if (!response.ok) {
-        setError(data.error ?? "Repository search failed");
+        const errorData = data as { error?: string };
+        setError(errorData.error ?? "Repository search failed");
         return;
       }
 
+      const repoData = data as RepoApiResponse;
       const repo: Repo = {
-        owner: data.owner,
-        name: data.name,
-        fullName: data.fullName,
-        description: data.description,
-        stars: data.stars,
-        forks: data.forks,
-        primaryLanguage: data.primaryLanguage,
-        hasReadme: data.hasReadme,
-        hasLicense: data.hasLicense,
-        openIssues: data.openIssues,
-        openPullRequests: data.openPullRequests,
-        updatedAt: data.updatedAt,
+        owner: repoData.owner,
+        name: repoData.name,
+        fullName: repoData.fullName,
+        description: repoData.description,
+        stars: repoData.stars,
+        forks: repoData.forks,
+        primaryLanguage: repoData.primaryLanguage,
+        hasReadme: repoData.hasReadme,
+        hasLicense: repoData.hasLicense,
+        openIssues: repoData.openIssues,
+        openPullRequests: repoData.openPullRequests,
+        updatedAt: repoData.updatedAt,
         score: 0,
         tips: ["Tips coming soon"],
-        languages: data.languagePercentages,
+        languages: repoData.languagePercentages,
       };
       // if no repo matches, set to null
 
