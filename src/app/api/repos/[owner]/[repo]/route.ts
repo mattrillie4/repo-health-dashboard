@@ -1,3 +1,9 @@
+import type {
+  GithubLanguagesResponse,
+  GitHubRepositoryResponse,
+  GithubSearchResponse,
+} from "@/lib/types";
+
 //input validation helper function
 function isValidInput(value: string): boolean {
   return (
@@ -53,7 +59,8 @@ export async function GET(
       );
     }
     // return response as json if valid
-    const repository = await githubResponse.json();
+    const repository =
+      (await githubResponse.json()) as GitHubRepositoryResponse;
 
     // search for amount of pull requests
     const pullRequestsResponse = await fetch(
@@ -73,7 +80,8 @@ export async function GET(
         { status: pullRequestsResponse.status },
       );
     }
-    const pullRequests = await pullRequestsResponse.json();
+    const pullRequests =
+      (await pullRequestsResponse.json()) as GithubSearchResponse;
     const openPullRequests = pullRequests.total_count;
     // search separately for issues that arent open pull requests
     const issuesResponse = await fetch(
@@ -94,7 +102,7 @@ export async function GET(
       );
     }
     // if okay, return response
-    const issues = await issuesResponse.json();
+    const issues = (await issuesResponse.json()) as GithubSearchResponse;
     const openIssues = issues.total_count;
 
     // search for the existence of a readme
@@ -141,7 +149,8 @@ export async function GET(
       );
     }
     // convert to json and calculate as percentages
-    const languagesRaw: Record<string, number> = await languagesResponse.json();
+    const languagesRaw =
+      (await languagesResponse.json()) as GithubLanguagesResponse;
     const total = Object.values(languagesRaw).reduce(
       (a: number, b: number) => a + b,
       0,

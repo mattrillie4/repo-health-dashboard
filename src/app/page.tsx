@@ -27,7 +27,6 @@ export default function HomePage() {
         return;
       }
 
-      console.log(data);
       const repo: Repo = {
         owner: data.owner,
         name: data.name,
