@@ -38,6 +38,17 @@ export default function RepoSummary({ repo }: RepoSummaryProps) {
           </div>
         ))}
       </div>
+      <div>
+        <h1 className="text-black mt-7 mb-3">Health Tips:</h1>
+        {repo.tips.map((tip) => (
+          <div
+            key={tip}
+            className="p-6 bg-white border border-gray-200 rounded-xl shadow-md max-w-sm"
+          >
+            <p className=" text-sm text-gray-500">{tip}</p>
+          </div>
+        ))}
+      </div>
 
       <div className="text-s mt-3 bg-gray-50 rounded-lg p-4">
         <p className="text-gray-900 text-sm">

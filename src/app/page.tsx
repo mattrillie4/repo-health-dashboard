@@ -29,6 +29,7 @@ export default function HomePage() {
       }
 
       const repoData = data as RepoApiResponse;
+
       const repo: Repo = {
         owner: repoData.owner,
         name: repoData.name,
@@ -42,8 +43,8 @@ export default function HomePage() {
         openIssues: repoData.openIssues,
         openPullRequests: repoData.openPullRequests,
         updatedAt: repoData.updatedAt,
-        score: 0,
-        tips: ["Tips coming soon"],
+        score: repoData.score,
+        tips: repoData.tips,
         languages: repoData.languagePercentages,
       };
       // if no repo matches, set to null

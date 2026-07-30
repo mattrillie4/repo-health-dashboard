@@ -20,7 +20,7 @@ export type Repo = {
 };
 
 // type for the normalized response returned by our Next.js API endpoint
-export type RepoApiResponse = {
+export type RepoApiData = {
   owner: string;
   name: string;
   fullName: string;
@@ -67,3 +67,22 @@ export type GitHubSearchResponse = {
 // type created for the language percentage spread request
 // returned from a separate github search query
 export type GitHubLanguagesResponse = Record<string, number>;
+
+/*Types for Repo Health Checks */
+export type HealthCheck = {
+  id: string;
+  label: string;
+  passed: boolean;
+  points: number;
+  maxPoints: number;
+  tip?: string;
+}; // type for each individual check/criteria
+
+export type HealthResult = {
+  score: number;
+  checks: HealthCheck[];
+  tips: string[];
+}; // type for the final score outcome for the repo
+// contains the array of checks
+
+export type RepoApiResponse = RepoApiData & HealthResult;

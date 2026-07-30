@@ -2,8 +2,10 @@ import type {
   GitHubLanguagesResponse,
   GitHubRepositoryResponse,
   GitHubSearchResponse,
+  RepoApiData,
   RepoApiResponse,
 } from "@/lib/types";
+import { calculateRepoHealth } from "@/lib/scoring/RepoHealthScore";
 
 //input validation helper function
 function isValidInput(value: string): boolean {
@@ -165,7 +167,7 @@ export async function GET(
     );
 
     // combine all GitHub responses into the shape returned by our API
-    const responseData: RepoApiResponse = {
+    const repoData: RepoApiData = {
       owner: repository.owner.login,
       name: repository.name,
       fullName: repository.full_name,
@@ -181,6 +183,12 @@ export async function GET(
       languagePercentages,
     };
 
+    const health = calculateRepoHealth(repoData);
+
+    const responseData: RepoApiResponse = {
+      ...repoData,
+      ...health,
+    };
     return Response.json(responseData);
   } catch {
     return Response.json(
