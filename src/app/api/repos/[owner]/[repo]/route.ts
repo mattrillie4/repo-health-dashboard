@@ -4,6 +4,7 @@ import type {
   GitHubSearchResponse,
   RepoApiData,
   RepoApiResponse,
+  GitHubReadmeResponse,
 } from "@/lib/types";
 import { calculateRepoHealth } from "@/lib/scoring/RepoHealthScore";
 
@@ -119,8 +120,12 @@ export async function GET(
       },
     );
     let hasReadme: boolean;
+    let readmeLength = 0;
     // check status of response
     if (readmeResponse.ok) {
+      const readme = (await readmeResponse.json()) as GitHubReadmeResponse;
+      readmeLength = readme.size;
+      console.log(readmeLength);
       hasReadme = true;
     } else if (readmeResponse.status === 404) {
       hasReadme = false;
@@ -179,6 +184,7 @@ export async function GET(
       openPullRequests,
       updatedAt: repository.updated_at,
       hasLicense: Boolean(repository.license),
+      readmeLength,
       hasReadme,
       languagePercentages,
     };

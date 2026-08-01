@@ -3,7 +3,7 @@ import type { HealthCheck, HealthResult, RepoApiData } from "@/lib/types";
 
 type RepoHealthInput = Pick<
   RepoApiData,
-  "description" | "hasReadme" | "hasLicense" | "updatedAt"
+  "description" | "hasReadme" | "hasLicense" | "updatedAt" | "readmeLength"
 >; // pick only relevant information from repo response
 
 export function calculateRepoHealth(
@@ -27,15 +27,54 @@ export function calculateRepoHealth(
   const hasDescription =
     repo.description !== null && repo.description.trim().length > 0;
 
+  // calculate points based on readme length
+  function scoreReadmeLength(len: number): {
+    points: number;
+    message: string;
+    passed: boolean;
+  } {
+    if (len == 0)
+      return { points: 0, message: "Add content to the readme", passed: false };
+    if (len < 700)
+      return {
+        points: 5,
+        message: "Explain all features of the repo in the README.",
+        passed: false,
+      };
+    if (len > 4500)
+      return {
+        points: 10,
+        message: "Make sure the README is efficient and not too crowded",
+        passed: false,
+      };
+
+    if (len >= 700)
+      return {
+        points: 15,
+        message: "Appropriate README length",
+        passed: true,
+      };
+    return { points: 0, message: "default", passed: true };
+  }
+  const readmeLengthScore = scoreReadmeLength(repo.readmeLength);
+
   // array of checks for various criteria
   const checks: HealthCheck[] = [
     {
       id: "readme",
       label: "Repository has a README",
       passed: repo.hasReadme,
-      points: repo.hasReadme ? 30 : 0,
-      maxPoints: 30,
+      points: repo.hasReadme ? 10 : 0,
+      maxPoints: 15,
       tip: "Add a README explaining the repository and how to use it.",
+    },
+    {
+      id: "readme length",
+      label: "Repository has an adequate README length",
+      passed: readmeLengthScore.passed,
+      points: readmeLengthScore.points,
+      maxPoints: 15,
+      tip: readmeLengthScore.message,
     },
     {
       id: "license",

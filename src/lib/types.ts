@@ -29,6 +29,7 @@ export type RepoApiData = {
   forks: number;
   primaryLanguage: string | null;
   hasReadme: boolean;
+  readmeLength: number;
   hasLicense: boolean;
   openIssues: number;
   openPullRequests: number;
@@ -67,6 +68,11 @@ export type GitHubSearchResponse = {
 // type created for the language percentage spread request
 // returned from a separate github search query
 export type GitHubLanguagesResponse = Record<string, number>;
+
+// type for readme response
+export type GitHubReadmeResponse = {
+  size: number;
+};
 
 /*Types for Repo Health Checks */
 export type HealthCheck = {

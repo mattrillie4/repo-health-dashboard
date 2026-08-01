@@ -14,7 +14,7 @@ export default function SearchForm({ onSearch }: SearchFormProps) {
   const [ownerInput, setOwnerInput] = useState("");
   const [validationError, setValidationError] = useState("");
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     // input validation before searching
     const owner = ownerInput.trim();
