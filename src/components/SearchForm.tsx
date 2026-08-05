@@ -35,7 +35,7 @@ export default function SearchForm({ onSearch }: SearchFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="mt-8 grid gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:grid-cols-[1fr_1fr_auto] sm:p-5">
       <input
         value={ownerInput}
         onChange={(e) => setOwnerInput(e.target.value)}
@@ -43,6 +43,7 @@ export default function SearchForm({ onSearch }: SearchFormProps) {
         aria-label="Repository owner"
         required
         maxLength={100}
+        className="min-w-0 rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
       ></input>
       <input
         value={repoInput}
@@ -51,12 +52,13 @@ export default function SearchForm({ onSearch }: SearchFormProps) {
         aria-label="Repository name"
         required
         maxLength={100}
+        className="min-w-0 rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
       ></input>
 
-      <button type="submit">Search</button>
+      <button type="submit" className="rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900">Search</button>
 
       {validationError && (
-        <p role="alert" className="text-sm text-red-600">
+        <p role="alert" className="text-sm text-red-600 sm:col-span-3">
           {validationError}
         </p>
       )}

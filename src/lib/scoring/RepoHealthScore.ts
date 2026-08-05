@@ -21,7 +21,45 @@ export function calculateRepoHealth(
   const wasRecentlyUpdated =
     Number.isFinite(daysSinceUpdate) &&
     daysSinceUpdate >= 0 &&
-    daysSinceUpdate <= 180;
+    daysSinceUpdate <= 60;
+
+  function scoreRecentActivity(days: number): {
+    points: number;
+    message: string;
+    passed: boolean;
+  } {
+    if (days < 10)
+      return {
+        points: 25,
+        message: "Repository has been recently updated",
+        passed: true,
+      };
+    if (days < 30)
+      return {
+        points: 20,
+        message: "Repository has been maintained this month",
+        passed: true,
+      };
+    if (days < 90)
+      return {
+        points: 10,
+        message: "Repo may need need maintenance",
+        passed: false,
+      };
+    if (days > 120)
+      return {
+        points: 0,
+        message:
+          "Consider reviewing or updating the code if project is still live",
+        passed: false,
+      };
+    return {
+      points: 0,
+      message: "default",
+      passed: true,
+    };
+  }
+  const recentActivityScore = scoreRecentActivity(daysSinceUpdate); // apply the scoring
 
   // bool that checks if the repo contains a description
   const hasDescription =
@@ -41,7 +79,7 @@ export function calculateRepoHealth(
         message: "Explain all features of the repo in the README.",
         passed: false,
       };
-    if (len > 4500)
+    if (len > 10500)
       return {
         points: 10,
         message: "Make sure the README is efficient and not too crowded",
@@ -64,7 +102,7 @@ export function calculateRepoHealth(
       id: "readme",
       label: "Repository has a README",
       passed: repo.hasReadme,
-      points: repo.hasReadme ? 10 : 0,
+      points: repo.hasReadme ? 15 : 0,
       maxPoints: 15,
       tip: "Add a README explaining the repository and how to use it.",
     },
@@ -94,11 +132,11 @@ export function calculateRepoHealth(
     },
     {
       id: "recent-activity",
-      label: "Repository was updated within 180 days",
-      passed: wasRecentlyUpdated,
-      points: wasRecentlyUpdated ? 25 : 0,
+      label: "Repository is actively being updated",
+      passed: recentActivityScore.passed,
+      points: recentActivityScore.points,
       maxPoints: 25,
-      tip: "Review whether the project is still actively maintained.",
+      tip: recentActivityScore.message,
     },
   ];
 

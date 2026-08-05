@@ -60,18 +60,31 @@ export default function HomePage() {
   }
 
   return (
-    <main>
-      <h1>GitHub Repo Health Dashboard</h1>
+    <main className="mx-auto min-h-screen w-full max-w-3xl px-5 py-12 sm:px-8 sm:py-16">
+      <h1 className="text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
+        GitHub Repo Health Dashboard
+      </h1>
+      <p className="mt-3 max-w-2xl text-base leading-7 text-slate-600">
+        Get a quick, practical overview of any public repository.
+      </p>
 
       <SearchForm onSearch={handleSearch} />
 
       {selectedRepo && !repoLoading ? (
         <RepoSummary repo={selectedRepo} />
       ) : (
-        <p>Search for a repository to see its health report.</p>
+        !repoLoading && (
+          <p className="mt-10 rounded-xl border border-dashed border-slate-300 bg-white px-6 py-10 text-center text-sm text-slate-500">
+            Search for a repository to see its health report.
+          </p>
+        )
       )}
-      {repoLoading && <p>Repo is loading...</p>}
-      {error && <p>{error}</p>}
+      {repoLoading && (
+        <p className="mt-10 rounded-xl border border-slate-200 bg-white px-6 py-8 text-center text-sm text-slate-600 shadow-sm">
+          Loading repository report…
+        </p>
+      )}
+      {error && <p role="alert" className="mt-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
     </main>
   );
 }
